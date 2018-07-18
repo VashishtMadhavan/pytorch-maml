@@ -194,6 +194,8 @@ class MetaLearner(object):
 @click.command()
 @click.argument('exp')
 @click.option('--dataset', type=str)
+@click.option('--data_dir', type=str)
+@click.option('--output_dir', type=str)
 @click.option('--num_cls', type=int)
 @click.option('--num_inst', type=int)
 @click.option('--batch', type=int)
@@ -202,8 +204,8 @@ class MetaLearner(object):
 @click.option('--num_inner_updates', type=int)
 @click.option('--lr',type=str)
 @click.option('--meta_lr', type=str)
-@click.option('--gpu', default=-1)
-def main(exp, dataset, num_cls, num_inst, batch, m_batch, num_updates, num_inner_updates, lr, meta_lr, gpu):
+@click.option('--gpu', default=0)
+def main(exp, dataset, data_dir, output_dir, num_cls, num_inst, batch, m_batch, num_updates, num_inner_updates, lr, meta_lr, gpu):
     random.seed(1337)
     np.random.seed(1337)
     setproctitle(exp)
@@ -214,19 +216,16 @@ def main(exp, dataset, num_cls, num_inst, batch, m_batch, num_updates, num_inner
         print(arg, values[arg])
 
     # make output dir
-    output = '/Users/vashishtmadhavan/output/{}'.format(exp)
-    data_dir = '/Users/vashishtmadhavan/data/'
-    try:
-        os.makedirs(output, exist_ok=True)
-    except:
-        pass
+    output = '{}/{}'.format(output_dir, exp)
+    os.makedirs(output, exist_ok=True)
+    
     # Set the gpu
     print('Setting GPU to', str(gpu))
     os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu)
     loss_fn = CrossEntropyLoss() 
     learner = MetaLearner(dataset, num_cls, num_inst, m_batch, float(meta_lr), batch, float(lr), num_updates, num_inner_updates, loss_fn)
     learner.data_dir = str(data_dir)
-    learner.output_dir = str(output_dir)
+    learner.output_dir = str(output)
     learner.train(exp)
 
 if __name__ == '__main__':
