@@ -58,7 +58,6 @@ def evaluate(net, loader):
         else:
             input_var = torch.autograd.Variable(in_)
             target_var = torch.autograd.Variable(target)
-        import pdb; pdb.set_trace()
         out = net.forward(input_var)
         loss = net.loss_fn(out, target_var)
         num_correct += count_correct(np.argmax(out.data.cpu().numpy(), axis=1), target.numpy())

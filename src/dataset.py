@@ -35,7 +35,7 @@ class Omniglot(FewShotDataset):
         ''' Load image '''
         im = Image.open('{}/{}'.format(self.root, idx)).convert('RGB')
         im = im.resize((28,28), resample=Image.LANCZOS) # per Chelsea's implementation
-        im = np.array(im, dtype=np.float32)
+        im = np.array(im, dtype=np.float32) / 255.
         return im
     
     def __getitem__(self, idx):
@@ -59,6 +59,8 @@ class MNIST(data.Dataset):
         # when using the bitmap dataset and PyTorch unpacker
         im = Image.open('{}/{}.png'.format(self.root, idx)).convert('RGB')
         im = np.array(im, dtype=np.float32)
+        if np.max(im) == 255:
+            im = im / 255.
         return im
 
     def __getitem__(self, idx):

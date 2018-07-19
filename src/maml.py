@@ -173,7 +173,7 @@ class MetaLearner(object):
 
             # Save a model snapshot every now and then
             if it % 500 == 0:
-                torch.save(self.net.state_dict(), '{}/{}/train_iter_{}.pth'.format(self.output_dir, exp, it))
+                torch.save(self.net.state_dict(), '{}/train_iter_{}.pth'.format(self.output_dir, it))
 
             # Save stuff
             tr_loss.append(tloss / self.meta_batch_size)
