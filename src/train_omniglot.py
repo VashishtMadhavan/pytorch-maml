@@ -89,6 +89,6 @@ for i in range(5):
     net = OmniglotNet(num_classes, loss_fn=CrossEntropyLoss())
     opt = SGD(net.parameters(), lr=0.001, momentum=0.9, weight_decay=0.0005)
     #opt = Adam(net.weights.values(), lr=1)
-    task = OmniglotTask('/Users/vashishtmadhavan/data/omniglot', num_classes, num_shot)
+    task = OmniglotTask('/home/vashisht/data/omniglot', num_classes, num_shot)
     train_step(task)
 
