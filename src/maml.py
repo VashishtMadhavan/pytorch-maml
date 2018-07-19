@@ -64,7 +64,6 @@ class MetaLearner(object):
             raise(Exception)
 
     def meta_update(self, task, ls):
-        print('\n Meta update \n')
         loader = get_data_loader(task, self.inner_batch_size, split='val')
         in_, target = loader.__iter__().next()
         # We use a dummy forward / backward pass to get the correct grads into self.net
@@ -169,7 +168,7 @@ class MetaLearner(object):
 
             print("Train Alphabet Train Loss: {}  Acc: {}".format(tloss / self.meta_batch_size, tacc / self.meta_batch_size))
             print("Train Alphabet Val Loss: {} Acc: {}".format(vloss / self.meta_batch_size, vacc / self.meta_batch_size))
-
+            print()
             # Perform the meta update
             print('Meta update', it)
             self.meta_update(task, grads)
