@@ -181,15 +181,15 @@ class MetaLearner(object):
             val_loss.append(vloss / self.meta_batch_size)
             val_acc.append(vacc / self.meta_batch_size)
 
-            np.save('{}/{}/tr_loss.npy'.format(self.output_dir, exp), np.array(tr_loss))
-            np.save('{}/{}/tr_acc.npy'.format(self.output_dir, exp), np.array(tr_acc))
-            np.save('{}/{}/val_loss.npy'.format(self.output_dir, exp), np.array(val_loss))
-            np.save('{}/{}/val_acc.npy'.format(self.output_dir, exp), np.array(val_acc))
+            np.save('{}/tr_loss.npy'.format(self.output_dir), np.array(tr_loss))
+            np.save('{}/tr_acc.npy'.format(self.output_dir), np.array(tr_acc))
+            np.save('{}/val_loss.npy'.format(self.output_dir), np.array(val_loss))
+            np.save('{}/val_acc.npy'.format(self.output_dir), np.array(val_acc))
 
-            np.save('{}/{}/meta_tr_loss.npy'.format(self.output_dir, exp), np.array(mtr_loss))
-            np.save('{}/{}/meta_tr_acc.npy'.format(self.output_dir, exp), np.array(mtr_acc))
-            np.save('{}/{}/meta_val_loss.npy'.format(self.output_dir, exp), np.array(mval_loss))
-            np.save('{}/{}/meta_val_acc.npy'.format(self.output_dir, exp), np.array(mval_acc))
+            np.save('{}/meta_tr_loss.npy'.format(self.output_dir), np.array(mtr_loss))
+            np.save('{}/meta_tr_acc.npy'.format(self.output_dir), np.array(mtr_acc))
+            np.save('{}/meta_val_loss.npy'.format(self.output_dir), np.array(mval_loss))
+            np.save('{}/meta_val_acc.npy'.format(self.output_dir), np.array(mval_acc))
 
 @click.command()
 @click.argument('exp')
@@ -216,8 +216,8 @@ def main(exp, dataset, data_dir, output_dir, num_cls, num_inst, batch, m_batch, 
         print(arg, values[arg])
 
     # make output dir
-    output = '{}/{}'.format(output_dir, exp)
-    os.makedirs(output, exist_ok=True)
+    output_dir = '{}/{}'.format(output_dir, exp)
+    os.makedirs(output_dir, exist_ok=True)
     
     # Set the gpu
     print('Setting GPU to', str(gpu))
@@ -225,7 +225,7 @@ def main(exp, dataset, data_dir, output_dir, num_cls, num_inst, batch, m_batch, 
     loss_fn = CrossEntropyLoss() 
     learner = MetaLearner(dataset, num_cls, num_inst, m_batch, float(meta_lr), batch, float(lr), num_updates, num_inner_updates, loss_fn)
     learner.data_dir = str(data_dir)
-    learner.output_dir = str(output)
+    learner.output_dir = str(output_dir)
     learner.train(exp)
 
 if __name__ == '__main__':
