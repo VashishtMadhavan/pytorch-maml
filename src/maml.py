@@ -124,8 +124,8 @@ class MetaLearner(object):
         mval_acc = mval_acc / 10
 
         print('-------------------------')
-        print('Meta train:', mtr_loss, mtr_acc)
-        print('Meta val:', mval_loss, mval_acc)
+        print('Test Set Mean Meta-Train Loss: {}  Acc: {}'.format(mtr_loss, mtr_acc))
+        print('Test Set Mean Meta-Train Loss: {}  Acc: {}'.format(mval_loss, mval_acc))
         print('-------------------------')
         del test_net
         return mtr_loss, mtr_acc, mval_loss, mval_acc

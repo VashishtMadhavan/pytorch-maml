@@ -64,10 +64,10 @@ class InnerLoop(OmniglotNet):
         ##### Test net after training, should be better than random ####
         tr_post_loss, tr_post_acc = evaluate(self, train_loader, fast_weights)
         val_post_loss, val_post_acc = evaluate(self, val_loader, fast_weights)
-        print('\n Train Inner step Loss', tr_pre_loss, tr_post_loss)
-        print('Train Inner step Acc', tr_pre_acc, tr_post_acc)
-        print('\n Val Inner step Loss', val_pre_loss, val_post_loss)
-        print('Val Inner step Acc', val_pre_acc, val_post_acc)
+        print('Pre-Train Loss: {}  Acc: {}'.format(tr_pre_loss, tr_post_acc))
+        print('Post-Train Loss: {}  Acc: {}'.format(tr_post_loss, tr_post_acc))
+        print('Pre-Val Loss: {}  Acc: {}'.format(val_pre_loss, val_pre_acc))
+        print('Post-Val Loss: {}  Acc: {}'.format(val_post_loss, val_post_acc))
         
         # Compute the meta gradient and return it
         in_, target = val_loader.__iter__().next()
