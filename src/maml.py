@@ -124,8 +124,8 @@ class MetaLearner(object):
         mval_acc = mval_acc / 10
 
         print('-------------------------')
-        print('Test Set Mean Meta-Train Loss: {}  Acc: {}'.format(mtr_loss, mtr_acc))
-        print('Test Set Mean Meta-Train Loss: {}  Acc: {}'.format(mval_loss, mval_acc))
+        print('Eval Alphabet Train Loss: {}  Acc: {}'.format(mtr_loss, mtr_acc))
+        print('Eval Alphabet Val Loss: {}  Acc: {}'.format(mval_loss, mval_acc))
         print('-------------------------')
         del test_net
         return mtr_loss, mtr_acc, mval_loss, mval_acc
@@ -166,6 +166,9 @@ class MetaLearner(object):
                 tacc += tra
                 vloss += vall
                 vacc += vala
+
+            print("Train Alphabet Train Loss: {}  Acc: {}".format(tloss / self.meta_batch_size, tacc / self.meta_batch_size))
+            print("Train Alphabet Val Loss: {} Acc: {}".format(vloss / self.meta_batch_size, vacc / self.meta_batch_size))
 
             # Perform the meta update
             print('Meta update', it)

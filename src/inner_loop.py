@@ -52,7 +52,7 @@ class InnerLoop(OmniglotNet):
         val_pre_loss, val_pre_acc = evaluate(self, val_loader)
         fast_weights = OrderedDict((name, param) for (name, param) in self.named_parameters())
         for i in range(self.num_updates):
-            print('inner step', i)
+            #print('inner step', i)
             in_, target = train_loader.__iter__().next()
             if i==0:
                 loss, _ = self.forward_pass(in_, target)
@@ -64,10 +64,11 @@ class InnerLoop(OmniglotNet):
         ##### Test net after training, should be better than random ####
         tr_post_loss, tr_post_acc = evaluate(self, train_loader, fast_weights)
         val_post_loss, val_post_acc = evaluate(self, val_loader, fast_weights)
-        print('Pre-Train Loss: {}  Acc: {}'.format(tr_pre_loss, tr_post_acc))
-        print('Post-Train Loss: {}  Acc: {}'.format(tr_post_loss, tr_post_acc))
-        print('Pre-Val Loss: {}  Acc: {}'.format(val_pre_loss, val_pre_acc))
-        print('Post-Val Loss: {}  Acc: {}'.format(val_post_loss, val_post_acc))
+        #print('Pre-Train Loss: {}  Acc: {}'.format(tr_pre_loss, tr_pre_acc))
+        #print('Post-Train Loss: {}  Acc: {}'.format(tr_post_loss, tr_post_acc))
+        #print('Pre-Val Loss: {}  Acc: {}'.format(val_pre_loss, val_pre_acc))
+        #print('Post-Val Loss: {}  Acc: {}'.format(val_post_loss, val_post_acc))
+        #print()
         
         # Compute the meta gradient and return it
         in_, target = val_loader.__iter__().next()
