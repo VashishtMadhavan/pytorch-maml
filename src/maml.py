@@ -13,8 +13,8 @@ from torch.nn import Parameter
 from torch.optim import SGD, Adam
 from torch.nn.modules.loss import CrossEntropyLoss
 
-from task import OmniglotTask, MNISTTask
-from dataset import Omniglot, MNIST
+from task import OmniglotTask, MNISTTask, NISTTask
+from dataset import Omniglot, MNIST, NIST
 from inner_loop import InnerLoop
 from omniglot_net import OmniglotNet
 from score import *
@@ -59,6 +59,8 @@ class MetaLearner(object):
             return MNISTTask(root, n_cl, n_inst, split)
         elif 'omniglot' in root:
             return OmniglotTask(root, n_cl, n_inst, split)
+        elif 'nist' in root:
+            return NISTTask(root, n_cl, n_inst, split)
         else:
             print('Unknown dataset')
             raise(Exception)
