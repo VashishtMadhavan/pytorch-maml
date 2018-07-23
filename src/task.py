@@ -57,7 +57,7 @@ class NISTTask(object):
 
     def __init__(self, root, num_cls, num_inst, split='train'):
         self.dataset = 'nist'
-        self.root = root # TODO: add split between train and test
+        self.root = '{}/train_images'.format(root) if split == 'train' else '{}/val_images'.format(root)
         self.num_cl = num_cls
         self.num_inst = num_inst
 

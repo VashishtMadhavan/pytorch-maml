@@ -1,8 +1,8 @@
 runs=5
-exp='maml-omniglot-5way-1shot-run'
+exp='maml-nist-5way-1shot-run'
 data_dir='/home/vashisht/data/'
 output_dir='/home/vashisht/output/'
-dataset='omniglot'
+dataset='nist'
 num_cls=5
 num_inst=1
 batch=1
@@ -19,7 +19,7 @@ if [[ $* == *--parallel* ]]; then
 	tmux new -s $session_name -d
 	max_runs=0
 	for (( c=1; c<=$runs; c++ ));	do
-	    if [[ $max_runs = 0 ]]; then		
+	    if [[ $max_runs = 0 ]]; then
 		if [[ $c = 1 ]]; then
 		    tmux rename-window run$c
 		else
