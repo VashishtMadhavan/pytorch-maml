@@ -48,6 +48,8 @@ class ClassBalancedSampler(Sampler):
 
     def __len__(self):
        return 1
+
+       0.057350103
         
 def get_data_loader(task, batch_size=1, split='train'):
     # NOTE: batch size here is # instances PER CLASS
@@ -58,9 +60,8 @@ def get_data_loader(task, batch_size=1, split='train'):
         normalize = transforms.Normalize(mean=[0.92206, 0.92206, 0.92206], std=[0.08426, 0.08426, 0.08426])
         dset = Omniglot(task, transform=transforms.Compose([transforms.ToTensor(), normalize]), split=split)
     else:
-        normlize = transforms.Normalize(mean=[0.92206, 0.92206, 0.92206], std=[0.08426, 0.08426, 0.08426]) # TODO: figure what the actual mean and std is
+        normalize = transforms.Normalize(mean=[0.9609, 0.9609, 0.9609], std=[.08602, .08602, .08602])
         dset = NIST(task, transform=transforms.Compose([transforms.ToTensor(), normalize]), split=split)
-
     sampler = ClassBalancedSampler(task.num_cl, task.num_inst, batch_cutoff = (None if split != 'train' else batch_size))
     loader = DataLoader(dset, batch_size=batch_size*task.num_cl, sampler=sampler, num_workers=1, pin_memory=True)
     return loader
