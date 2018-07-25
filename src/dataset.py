@@ -69,6 +69,27 @@ class NIST(FewShotDataset):
             label = self.target_transform(label)
         return im, label
 
+class PACS(FewShotDataset):
+    def __init__(self, *args, **kwargs):
+        super(PACS, self).__init__(*args, **kwargs)
+
+    def load_image(self, idx):
+        ''' Load image '''
+        im = Image.open('{}/{}'.format(self.root, idx)).convert('RGB')
+        im = im.resize((224, 224), resample=Image.LANCZOS) # per Chelsea's implementation
+        im = np.array(im, dtype=np.float32) / 255.
+        return im
+
+    def __getitem__(self, idx):
+        img_id = self.img_ids[idx]
+        im = self.load_image(img_id)
+        if self.transform is not None:
+            im = self.transform(im)
+        label = self.labels[idx]
+        if self.target_transform is not None:
+            label = self.target_transform(label)
+        return im, label
+
 class MNIST(data.Dataset):
     
     def __init__(self, *args, **kwargs):

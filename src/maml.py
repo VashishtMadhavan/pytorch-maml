@@ -13,10 +13,12 @@ from torch.nn import Parameter
 from torch.optim import SGD, Adam
 from torch.nn.modules.loss import CrossEntropyLoss
 
-from task import OmniglotTask, MNISTTask, NISTTask
-from dataset import Omniglot, MNIST, NIST
+from task import OmniglotTask, MNISTTask, NISTTask, PACSTask
+from dataset import Omniglot, MNIST, NIST, PACS
 from inner_loop import InnerLoop
+from pacs_inner_loop import PACSInnerLoop
 from omniglot_net import OmniglotNet
+from pacs_net import PACSNet
 from score import *
 from data_loading import *
 
@@ -26,7 +28,7 @@ class MetaLearner(object):
                 dataset,
                 num_classes,
                 num_inst,
-                meta_batch_size, 
+                meta_batch_size,
                 meta_step_size, 
                 inner_batch_size, 
                 inner_step_size,
@@ -48,10 +50,16 @@ class MetaLearner(object):
         # Make the nets
         #TODO: don't actually need two nets
         num_input_channels = 1 if self.dataset == 'mnist' else 3
-        self.net = OmniglotNet(num_classes, self.loss_fn, num_input_channels)
-        self.net.cuda()
-        self.fast_net = InnerLoop(num_classes, self.loss_fn, self.num_inner_updates, self.inner_step_size, self.inner_batch_size, self.meta_batch_size, num_input_channels)
-        self.fast_net.cuda()
+        if self.dataset == "pacs":
+            self.net = PACSNet(num_classes, self.loss_fn, num_input_channels)
+            self.net.cuda()
+            self.fast_net = PACSInnerLoop(num_classes, self.loss_fn, self.num_inner_updates, self.inner_step_size, self.inner_batch_size, self.meta_batch_size, num_input_channels)
+            self.fast_net.cuda()
+        else:
+            self.net = OmniglotNet(num_classes, self.loss_fn, num_input_channels)
+            self.net.cuda()
+            self.fast_net = InnerLoop(num_classes, self.loss_fn, self.num_inner_updates, self.inner_step_size, self.inner_batch_size, self.meta_batch_size, num_input_channels)
+            self.fast_net.cuda()
         self.opt = Adam(self.net.parameters(), lr=meta_step_size)
             
     def get_task(self, root, n_cl, n_inst, split='train'):
@@ -61,6 +69,8 @@ class MetaLearner(object):
             return OmniglotTask(root, n_cl, n_inst, split)
         elif 'nist' in root:
             return NISTTask(root, n_cl, n_inst, split)
+        elif 'pacs' in root:
+            return PACSTask(root, n_cl, n_inst, split)
         else:
             print('Unknown dataset')
             raise(Exception)
@@ -93,7 +103,11 @@ class MetaLearner(object):
 
     def test(self):
         num_in_channels = 1 if self.dataset == 'mnist' else 3
-        test_net = OmniglotNet(self.num_classes, self.loss_fn, num_in_channels)
+        if self.dataset == 'pacs':
+            test_net = PACSNet(self.num_classes, self.loss_fn, num_in_channels)
+        else:
+            test_net = OmniglotNet(self.num_classes, self.loss_fn, num_in_channels)
+
         mtr_loss, mtr_acc, mval_loss, mval_acc = 0.0, 0.0, 0.0, 0.0
         # Select ten tasks randomly from the test set to evaluate on
         for _ in range(10):

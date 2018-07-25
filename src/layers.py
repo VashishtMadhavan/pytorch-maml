@@ -21,6 +21,9 @@ def conv2d(input, weight, bias=None, stride=1, padding=0, dilation=1, groups=1):
 def relu(input):
     return F.threshold(input, 0, 0, inplace=True)
 
+def dropout(input, p=0.5):
+    return F.dropout(input, p)
+
 def maxpool(input, kernel_size, stride=None):
     return F.max_pool2d(input, kernel_size, stride)
 
