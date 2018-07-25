@@ -87,7 +87,6 @@ class NISTTask(object):
         return instance.split('/')[0]
 
 
-# TODO: Implement This
 class PACSTask(object):
     '''
     Sample a few-shot learning task from the Omniglot dataset
@@ -99,35 +98,47 @@ class PACSTask(object):
     '''
 
     def __init__(self, root, num_cls, num_inst, split='train'):
-        self.dataset = 'nist'
-        self.root = '{}/train_images'.format(root) if split == 'train' else '{}/val_images'.format(root)
+        self.dataset = 'pacs'
+        self.root = root
         self.num_cl = num_cls
         self.num_inst = num_inst
 
-        # Sample num_cls characters and num_inst instances of each
-        chars = os.listdir(self.root)
-        random.shuffle(chars)
-        classes = chars[:num_cls]
+        # Sample two styles
+        styles = os.listdir('.')
+        random.shuffle(styles)
+
+        styles = styles[:2]
+        objects = os.listdir(os.path.join(self.root, styles[0]))
+        random.shuffle(objects)
+
+        classes = objects[:num_cls]
         labels = np.array(range(len(classes)))
         labels = dict(zip(classes, labels))
-        instances = dict()
+        train_instances = dict(); val_instances = dict()
+
         # Now sample from the chosen classes to create class-balanced train and val sets
         self.train_ids = []
         self.val_ids = []
         for c in classes:
             # First get all isntances of that class
-            instance_dir = '{}/train_{}/'.format(c, c)
-            temp = [os.path.join(instance_dir, x) for x in os.listdir(os.path.join(self.root, instance_dir))]
-            instances[c] = random.sample(temp, len(temp))
+            train_dir = '{}/{}'.format(styles[0], c)
+            val_dir = '{}/{}'.format(styles[1], c)
+            train_temp = [os.path.join(train_dir, x) for x in os.listdir(os.path.join(self.root, train_dir))]
+            val_temp = [os.path.join(val_dir, x) for x in os.listdir(os.path.join(self.root, val_dir))]
+
+            train_instances[c] = random.sample(train_temp, len(train_temp))
+            val_instances[c] = random.sample(val_temp, len(val))
+
             # Sample num_inst instances randomly each for train and val
-            self.train_ids += instances[c][:num_inst]
-            self.val_ids += instances[c][num_inst:num_inst*2]
+            self.train_ids += train_instances[c][:num_inst]
+            self.val_ids += val_instances[c][:num_inst]
+
         # Keep instances separated by class for class-balanced mini-batches
         self.train_labels = [labels[self.get_class(x)] for x in self.train_ids]
         self.val_labels = [labels[self.get_class(x)] for x in self.val_ids]
 
     def get_class(self, instance):
-        return instance.split('/')[0]
+        return instance.split('/')[-2]
 
 class MNISTTask(object):
     '''

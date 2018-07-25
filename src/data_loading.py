@@ -48,8 +48,6 @@ class ClassBalancedSampler(Sampler):
 
     def __len__(self):
        return 1
-
-       0.057350103
         
 def get_data_loader(task, batch_size=1, split='train'):
     # NOTE: batch size here is # instances PER CLASS
