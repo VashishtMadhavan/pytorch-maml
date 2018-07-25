@@ -104,7 +104,7 @@ class PACSTask(object):
         self.num_inst = num_inst
 
         # Sample two styles
-        styles = os.listdir('.')
+        styles = os.listdir(root)
         random.shuffle(styles)
 
         styles = styles[:2]
@@ -127,7 +127,7 @@ class PACSTask(object):
             val_temp = [os.path.join(val_dir, x) for x in os.listdir(os.path.join(self.root, val_dir))]
 
             train_instances[c] = random.sample(train_temp, len(train_temp))
-            val_instances[c] = random.sample(val_temp, len(val))
+            val_instances[c] = random.sample(val_temp, len(val_temp))
 
             # Sample num_inst instances randomly each for train and val
             self.train_ids += train_instances[c][:num_inst]

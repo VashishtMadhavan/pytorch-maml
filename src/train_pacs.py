@@ -23,6 +23,7 @@ DEBUG=0
 num_classes = 5
 num_shot = 1
 inner_batch_size = 5
+gpu = 1
 
 def get_data_loader(task, split='train'):
     dset = PACS(task, transform=transforms.ToTensor(), split=split) 
@@ -83,9 +84,12 @@ def train_step(task):
     print('After training update', evaluate(net, train_loader))
 
 # Script
+os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu)
 for i in range(5):
     print('Run ', i)
     net = PACSNet(num_classes, loss_fn=CrossEntropyLoss())
+    if torch.cuda.is_available():
+        net.cuda()
     opt = SGD(net.parameters(), lr=0.001, momentum=0.9, weight_decay=0.0005)
     #opt = Adam(net.weights.values(), lr=1)
     task = PACSTask('/home/vashisht/data/pacs', num_classes, num_shot)

@@ -86,6 +86,8 @@ def train_step(task):
 for i in range(5):
     print('Run ', i)
     net = OmniglotNet(num_classes, loss_fn=CrossEntropyLoss())
+    if torch,cuda.is_available():
+        net.cuda()
     opt = SGD(net.parameters(), lr=0.001, momentum=0.9, weight_decay=0.0005)
     #opt = Adam(net.weights.values(), lr=1)
     task = OmniglotTask('/home/vashisht/data/omniglot', num_classes, num_shot)
