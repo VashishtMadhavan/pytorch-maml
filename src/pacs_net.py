@@ -48,11 +48,17 @@ class PACSNet(nn.Module):
         self.loss_fn = loss_fn
 
         # Initialize weights to pretrained imagenet weights
+        self._init_weights()
+        model_dict = self.state_dict()
         pretrain_dict = model_zoo.load_url(alexnet_url)
-        self.load_state_dict(pretrain_dict)
 
-        # Init weights to random
-        # self._init_weights()
+        # delete last layer weights
+        del pretrain_dict['classifier.6.weight']; del pretrain_dict['classifier.6.bias']
+        model_dict.update(pretrain_dict)
+
+        # load everything but last layer weights
+        self.load_state_dict(model_dict)
+
 
     def forward(self, x, weights=None):
         ''' Define what happens to data in the net '''

@@ -2,7 +2,6 @@ import click
 import os, sys
 import numpy as np
 from setproctitle import setproctitle
-import pdb
 
 import torch
 import torch.nn as nn
@@ -74,7 +73,7 @@ def train_step(task):
     ##### Test net before training, should be random accuracy ####
     print('Before training update', evaluate(net, train_loader))
     for i in range(10):
-        loss,_ = forward(net, train_loader)
+        loss, out = forward(net, train_loader)
         print('Loss', loss.data.cpu().numpy())
         opt.zero_grad()
         loss.backward()
