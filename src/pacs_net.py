@@ -17,45 +17,42 @@ class PACSNet(nn.Module):
 
     def __init__(self, num_classes, loss_fn, num_in_channels=3):
         super(PACSNet, self).__init__()
+
         # Define the network
-        self.features = nn.Sequential(OrderedDict([
-            ('conv1', nn.Conv2d(3, 64, kernel_size=11, stride=4, padding=2)),
-            ('relu1', nn.ReLU(inplace=True)),
-            ('pool1', nn.MaxPool2d(kernel_size=3, stride=2)),
-
-            ('conv2', nn.Conv2d(64, 192, kernel_size=5, padding=2)),
-            ('relu2', nn.ReLU(inplace=True)),
-            ('pool2', nn.MaxPool2d(kernel_size=3, stride=2)),
-
-            ('conv3', nn.Conv2d(192, 384, kernel_size=3, padding=1)),
-            ('relu3', nn.ReLU(inplace=True)),
-
-            ('conv4', nn.Conv2d(384, 256, kernel_size=3, padding=1)),
-            ('relu4', nn.ReLU(inplace=True)),
-
-            ('conv5', nn.Conv2d(256, 256, kernel_size=3, padding=1)),
-            ('relu5', nn.ReLU(inplace=True)),
-            ('pool5', nn.MaxPool2d(kernel_size=3, stride=2)),
-        ]))
-
-        self.classifier = nn.Sequential(OrderedDict([
-            ('drop6', nn.Dropout()),
-            ('fc6', nn.Linear(256 * 6 * 6, 4096)),
-            ('relu6', nn.ReLU(inplace=True)),
-            ('drop7', nn.Dropout()),
-            ('fc7', nn.Linear(4096, 4096)),
-            ('relu7', nn.ReLU(inplace=True)),
-            ('fc8', nn.Linear(4096, num_classes)),
-        ]))
+        self.features = nn.Sequential(
+            nn.Conv2d(3, 64, kernel_size=11, stride=4, padding=2),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2),
+            nn.Conv2d(64, 192, kernel_size=5, padding=2),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2),
+            nn.Conv2d(192, 384, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(384, 256, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(256, 256, kernel_size=3, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3, stride=2),
+        )
+        self.classifier = nn.Sequential(
+            nn.Dropout(),
+            nn.Linear(256 * 6 * 6, 4096),
+            nn.ReLU(inplace=True),
+            nn.Dropout(),
+            nn.Linear(4096, 4096),
+            nn.ReLU(inplace=True),
+            nn.Linear(4096, num_classes),
+        )
         
         # Define loss function
         self.loss_fn = loss_fn
 
         # Initialize weights to pretrained imagenet weights
-        #self._init_weights()
         pretrain_dict = model_zoo.load_url(alexnet_url)
-        import pdb; pdb.set_trace()
         self.load_state_dict(pretrain_dict)
+
+        # Init weights to random
+        # self._init_weights()
 
     def forward(self, x, weights=None):
         ''' Define what happens to data in the net '''
@@ -65,33 +62,33 @@ class PACSNet(nn.Module):
             x = self.classifier(x)
         else:
             # conv1
-            x = conv2d(x, weights['features.conv1.weight'], weights['features.conv1.bias'])
+            x = conv2d(x, weights['features.0.weight'], weights['features.0.bias'])
             x = relu(x)
             x = maxpool(x, kernel_size=3, stride=2)
             # conv2
-            x = conv2d(x, weights['features.conv2.weight'], weights['features.conv2.bias'])
+            x = conv2d(x, weights['features.3.weight'], weights['features.3.bias'])
             x = relu(x)
             x = maxpool(x, kernel_size=3, stride=2)
             # conv3
-            x = conv2d(x, weights['features.conv3.weight'], weights['features.conv3.bias'])
+            x = conv2d(x, weights['features.6.weight'], weights['features.6.bias'])
             x = relu(x)
             # conv4
-            x = conv2d(x, weights['features.conv4.weight'], weights['features.conv4.bias'])
+            x = conv2d(x, weights['features.8.weight'], weights['features.8.bias'])
             x = relu(x)
             # conv5
-            x = conv2d(x, weights['features.conv5.weight'], weights['features.conv5.bias'])
+            x = conv2d(x, weights['features.10.weight'], weights['features.10.bias'])
             x = relu(x)
             x = maxpool(x, kernel_size=3, stride=2)
 
             # classifier trunk
             x = x.view(x.size(0), 256 * 6 * 6)
             x = dropout(x, p=0.5)
-            x = linear(x, weights['classifier.fc6.weight'], weights['classifier.fc6.bias'])
+            x = linear(x, weights['classifier.1.weight'], weights['classifier.1.bias'])
             x = relu(x)
             x = dropout(x, p=0.5)
-            x = linear(x, weights['classifier.fc7.weight'], weights['classifier.fc7.bias'])
+            x = linear(x, weights['classifier.4.weight'], weights['classifier.4.bias'])
             x = relu(x)
-            x = linear(x, weights['classifier.fc8.weight'], weights['classifier.fc8.bias'])
+            x = linear(x, weights['classifier.6.weight'], weights['classifier.6.bias'])
         return x
 
     def net_forward(self, x, weights=None):
