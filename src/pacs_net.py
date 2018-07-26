@@ -5,8 +5,10 @@ from collections import OrderedDict
 
 import torch
 import torch.nn as nn
+import torch.utils.model_zoo as model_zoo
 
 from layers import *
+alexnet_url = 'https://download.pytorch.org/models/alexnet-owt-4df8aa71.pth'
 
 class PACSNet(nn.Module):
     '''
@@ -49,8 +51,11 @@ class PACSNet(nn.Module):
         # Define loss function
         self.loss_fn = loss_fn
 
-        # Initialize weights
-        self._init_weights()
+        # Initialize weights to pretrained imagenet weights
+        #self._init_weights()
+        pretrain_dict = model_zoo.load_url(alexnet_url)
+        import pdb; pdb.set_trace()
+        self.load_state_dict(pretrain_dict)
 
     def forward(self, x, weights=None):
         ''' Define what happens to data in the net '''
