@@ -68,21 +68,21 @@ class PACSNet(nn.Module):
             x = self.classifier(x)
         else:
             # conv1
-            x = conv2d(x, weights['features.0.weight'], weights['features.0.bias'])
+            x = conv2d(x, weights['features.0.weight'], weights['features.0.bias'], stride=4, padding=2)
             x = relu(x)
             x = maxpool(x, kernel_size=3, stride=2)
             # conv2
-            x = conv2d(x, weights['features.3.weight'], weights['features.3.bias'])
+            x = conv2d(x, weights['features.3.weight'], weights['features.3.bias'], padding=2)
             x = relu(x)
             x = maxpool(x, kernel_size=3, stride=2)
             # conv3
-            x = conv2d(x, weights['features.6.weight'], weights['features.6.bias'])
+            x = conv2d(x, weights['features.6.weight'], weights['features.6.bias'], padding=1)
             x = relu(x)
             # conv4
-            x = conv2d(x, weights['features.8.weight'], weights['features.8.bias'])
+            x = conv2d(x, weights['features.8.weight'], weights['features.8.bias'], padding=1)
             x = relu(x)
             # conv5
-            x = conv2d(x, weights['features.10.weight'], weights['features.10.bias'])
+            x = conv2d(x, weights['features.10.weight'], weights['features.10.bias'], padding=1)
             x = relu(x)
             x = maxpool(x, kernel_size=3, stride=2)
 

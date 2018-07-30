@@ -22,7 +22,9 @@ DEBUG=0
 num_classes = 5
 num_shot = 1
 inner_batch_size = 5
+inner_steps = 100
 gpu = 1
+train_iters = 1000
 
 def get_data_loader(task, split='train'):
     dset = PACS(task, transform=transforms.ToTensor(), split=split) 
@@ -72,7 +74,7 @@ def train_step(task):
     train_loader = get_data_loader(task)
     ##### Test net before training, should be random accuracy ####
     print('Before training update', evaluate(net, train_loader))
-    for i in range(10):
+    for i in range(inner_steps):
         loss, out = forward(net, train_loader)
         print('Loss', loss.data.cpu().numpy())
         opt.zero_grad()
@@ -84,7 +86,7 @@ def train_step(task):
 
 # Script
 os.environ['CUDA_VISIBLE_DEVICES'] = str(gpu)
-for i in range(5):
+for i in range(train_iters):
     print('Run ', i)
     net = PACSNet(num_classes, loss_fn=CrossEntropyLoss())
     if torch.cuda.is_available():

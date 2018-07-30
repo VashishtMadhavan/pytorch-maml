@@ -52,7 +52,6 @@ class PACSInnerLoop(PACSNet):
         val_pre_loss, val_pre_acc = evaluate(self, val_loader)
         fast_weights = OrderedDict((name, param) for (name, param) in self.named_parameters())
         for i in range(self.num_updates):
-            #print('inner step', i)
             in_, target = train_loader.__iter__().next()
             if i==0:
                 loss, _ = self.forward_pass(in_, target)
