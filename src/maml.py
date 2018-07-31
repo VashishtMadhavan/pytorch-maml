@@ -215,6 +215,7 @@ class MetaLearner(object):
 @click.option('--data_dir', type=str)
 @click.option('--output_dir', type=str)
 @click.option('--num_cls', type=int)
+@click.option('--seed', type=int)
 @click.option('--num_inst', type=int)
 @click.option('--batch', type=int)
 @click.option('--m_batch', type=int)
@@ -223,9 +224,9 @@ class MetaLearner(object):
 @click.option('--lr',type=str)
 @click.option('--meta_lr', type=str)
 @click.option('--gpu', default=0)
-def main(exp, dataset, data_dir, output_dir, num_cls, num_inst, batch, m_batch, num_updates, num_inner_updates, lr, meta_lr, gpu):
-    random.seed(1337)
-    np.random.seed(1337)
+def main(exp, dataset, data_dir, output_dir, num_cls, seed, num_inst, batch, m_batch, num_updates, num_inner_updates, lr, meta_lr, gpu):
+    random.seed(seed)
+    np.random.seed(seed)
     setproctitle(exp)
     # Print all the args for logging purposes
     frame = inspect.currentframe()

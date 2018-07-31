@@ -26,7 +26,7 @@ if [[ $* == *--parallel* ]]; then
 		    tmux new-window -n run$c
 		fi
 	    fi
-            tmux send-keys -t $session_name "python maml.py $exp$c --dataset $dataset --data_dir $data_dir --output_dir $output_dir --num_cls $num_cls --num_inst $num_inst --batch $batch --m_batch $m_batch --num_updates $num_updates --num_inner_updates $num_inner_updates --lr $lr --meta_lr $meta_lr --gpu $gpu 2>&1 | tee $output_dir/$exp$c/$exp$c
+            tmux send-keys -t $session_name "python maml.py $exp$c --dataset $dataset --seed $c --data_dir $data_dir --output_dir $output_dir --num_cls $num_cls --num_inst $num_inst --batch $batch --m_batch $m_batch --num_updates $num_updates --num_inner_updates $num_inner_updates --lr $lr --meta_lr $meta_lr --gpu $gpu 2>&1 | tee $output_dir/$exp$c/$exp$c
             && echo Running next script in 5s && sleep 5 && "
 	done
 	max_runs=$(($max_runs>$runs?$max_runs:$runs))
@@ -37,7 +37,7 @@ if [[ $* == *--parallel* ]]; then
 else
 	tmux new -s $session_name -d
 	for (( c=1; c<=$runs; c++ ));	do
-            tmux send-keys -t $session_name "python maml.py $exp$c --dataset $dataset --data_dir $data_dir --output_dir $output_dir --num_cls $num_cls --num_inst $num_inst --batch $batch --m_batch $m_batch --num_updates $num_updates --num_inner_updates $num_inner_updates --lr $lr --meta_lr $meta_lr --gpu $gpu 2>&1 | tee $output_dir/$exp$c/$exp$c && echo Running next script in 5s && sleep 5 && "
+            tmux send-keys -t $session_name "python maml.py $exp$c --dataset $dataset --data_dir $data_dir --seed $c --output_dir $output_dir --num_cls $num_cls --num_inst $num_inst --batch $batch --m_batch $m_batch --num_updates $num_updates --num_inner_updates $num_inner_updates --lr $lr --meta_lr $meta_lr --gpu $gpu 2>&1 | tee $output_dir/$exp$c/$exp$c && echo Running next script in 5s && sleep 5 && "
         done
         tmux send-keys -t $session_name " echo Done" C-m
         tmux a -t $session_name

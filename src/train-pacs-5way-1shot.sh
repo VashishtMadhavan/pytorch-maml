@@ -1,4 +1,4 @@
-exp='maml-pacs-5way-1shot-TEST'
+exp='maml-pacs-5way-1shot-TEST2'
 data_dir='/home/vashisht/data/'
 output_dir='/home/vashisht/output/'
 dataset='pacs'
@@ -9,6 +9,7 @@ m_batch=20
 num_updates=15000
 num_inner_updates=5
 lr='1e-2'
-meta_lr='1e-3'
-gpu=1
-python maml.py $exp --dataset $dataset --data_dir $data_dir --output_dir $output_dir --num_cls $num_cls --num_inst $num_inst --batch $batch --m_batch $m_batch --num_updates $num_updates --num_inner_updates $num_inner_updates --lr $lr --meta_lr $meta_lr --gpu $gpu 2>&1 | tee $output_dir/$exp/$exp
+meta_lr='1e-4'
+gpu=0
+seed=2
+python maml.py $exp --dataset $dataset --seed $seed --data_dir $data_dir --output_dir $output_dir --num_cls $num_cls --num_inst $num_inst --batch $batch --m_batch $m_batch --num_updates $num_updates --num_inner_updates $num_inner_updates --lr $lr --meta_lr $meta_lr --gpu $gpu 2>&1 | tee $output_dir/$exp/$exp
